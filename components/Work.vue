@@ -32,7 +32,7 @@
       </div>
       <img
         class="rounded-xl w-[100%] md:w-[50%]  grayscale-[50%] group-hover:grayscale-0 transition-all duration-300"
-        src="../assets/images/qydha.jpg"
+        src="~/assets/images/qydha.jpg"
       />
     </article>
 
@@ -66,7 +66,7 @@
       </div>
       <img
         class="rounded-xl w-[100%]  md:h-auto md:w-[50%] grayscale-[50%] group-hover:grayscale-0 transition-all duration-300"
-        src="../assets/images/zat.jpg"
+        src="~/assets/images/zat.jpg"
       />
     </article>
 
@@ -95,7 +95,7 @@
       </div>
       <img
         class="rounded-xl w-[100%] md:w-[50%]  grayscale-[50%] group-hover:grayscale-0 transition-all duration-300"
-        src="../assets/images/brouj.jpg"
+        src="~/assets/images/brouj.jpg"
       />
     </article>
   </section>

@@ -1,60 +1,47 @@
 <template>
   <header
-    class="w-[90%] h-16 fixed top-0 left-[5%] mx-auto rounded-b-xl z-50 bg-[#1B1B1B]/80 backdrop-blur-md text-white shadow-lg transition-all duration-300"
+    class="fixed left-1/2 top-0 z-50 w-[92%] max-w-5xl -translate-x-1/2 rounded-b-2xl border border-[#62BA1B]/10 bg-[#1B1B1B]/80 text-white shadow-lg backdrop-blur-md transition-all duration-300"
+    :class="{ scrolled: isScrolled }"
   >
-    <nav class="flex justify-around items-center h-full w-full p-2">
-      <div class="flex items-center gap-8">
+    <nav class="flex h-16 items-center justify-between gap-3 px-4 md:px-6">
+      <div class="flex items-center gap-2 sm:gap-4 md:gap-8">
         <NuxtLink
-          to="/#Hero"
+          v-for="link in navLinks"
+          :key="link.hash"
+          :to="`/${link.hash}`"
           class="nav-link group"
-          :class="{ active_link: $route.hash === '#Hero' }"
+          :class="{ active_link: route.hash === link.hash }"
         >
-          <span class="nav-text">Home</span>
-        </NuxtLink>
-
-        <NuxtLink
-          to="/#Work"
-          class="nav-link group"
-          :class="{ active_link: $route.hash === '#Work' }"
-        >
-          <span class="nav-text">Works</span>
-        </NuxtLink>
-
-        <NuxtLink
-          to="/#AboutMe"
-          class="nav-link group"
-          :class="{ active_link: $route.hash === '#AboutMe' }"
-        >
-          <span class="nav-text">About Me</span>
+          <span class="nav-text">{{ link.label }}</span>
         </NuxtLink>
       </div>
 
-      <div class="flex items-center gap-5">
+      <div class="flex items-center gap-3">
         <a
           href="https://www.linkedin.com/in/hazem-hamdy-238533324/"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-link group"
+          aria-label="LinkedIn profile"
         >
-          <div class="social-icon-wrapper">
-            <img
-              src="~ assets/images/whitelinkedin.png"
-              class="social-icon"
-              alt="LinkedIn"
-            />
-          </div>
+          <img
+            src="~/assets/images/whitelinkedin.png"
+            class="social-icon"
+            alt=""
+          />
         </a>
-        <a 
-          href="https://github.com/hazem537" 
+        <a
+          href="https://github.com/hazem537"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-link group"
+          aria-label="GitHub profile"
         >
-          <div class="social-icon-wrapper">
-            <img
-              src="~ assets/images/whitegithub.png"
-              class="social-icon"
-              alt="GitHub"
-            />
-          </div>
+          <img
+            src="~/assets/images/whitegithub.png"
+            class="social-icon"
+            alt=""
+          />
         </a>
       </div>
     </nav>
@@ -62,25 +49,33 @@
 </template>
 
 <script lang="ts" setup>
-// Add scroll event listener to change header style on scroll
+const route = useRoute()
+const isScrolled = ref(false)
+
+const navLinks = [
+  { label: 'Home', hash: '#Hero' },
+  { label: 'Works', hash: '#Work' },
+  { label: 'About Me', hash: '#AboutMe' },
+]
+
+const onScroll = () => {
+  isScrolled.value = window.scrollY > 50
+}
+
 onMounted(() => {
-  window.addEventListener('scroll', () => {
-    const header = document.querySelector('header')
-    if (window.scrollY > 50) {
-      header?.classList.add('scrolled')
-    } else {
-      header?.classList.remove('scrolled')
-    }
-  })
+  onScroll()
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
 
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
-
+<style scoped>
 nav {
   font-family: "IBM Plex Mono", monospace;
-  @apply md:text-[1rem] text-[.7rem] text-[#9C9C9C];
+  @apply text-[0.7rem] text-[#9C9C9C] md:text-[1rem];
 }
 
 .nav-link {
@@ -93,7 +88,7 @@ nav {
 
 .nav-link::before {
   content: '';
-  @apply absolute inset-0 bg-[#62BA1B] opacity-0 rounded-md transition-opacity duration-300;
+  @apply absolute inset-0 rounded-md bg-[#62BA1B] opacity-0 transition-opacity duration-300;
   transform: scale(0.8);
 }
 
@@ -108,12 +103,12 @@ nav {
 
 .active_link::after {
   content: '';
-  @apply absolute bottom-0 left-0 w-full h-0.5 bg-[#62BA1B] transform scale-x-100 transition-transform duration-300;
+  @apply absolute bottom-0 left-0 h-0.5 w-full scale-x-100 bg-[#62BA1B] transition-transform duration-300;
 }
 
 .nav-link:not(.active_link)::after {
   content: '';
-  @apply absolute bottom-0 left-0 w-full h-0.5 bg-[#62BA1B] transform scale-x-0 transition-transform duration-300;
+  @apply absolute bottom-0 left-0 h-0.5 w-full scale-x-0 bg-[#62BA1B] transition-transform duration-300;
 }
 
 .nav-link:hover::after {
@@ -121,44 +116,29 @@ nav {
 }
 
 .social-link {
-  @apply relative transition-transform duration-300 hover:scale-110;
-}
-
-.social-icon-wrapper {
-  @apply relative overflow-hidden rounded-full transition-all duration-300;
+  @apply relative flex h-9 w-9 items-center justify-center rounded-full border border-[#62BA1B]/20 bg-[#080808]/40 transition-all duration-300 hover:scale-110 hover:border-[#62BA1B]/50;
 }
 
 .social-icon {
-  @apply w-8 h-8 transition-transform duration-300;
+  @apply h-5 w-5 transition-transform duration-300;
 }
 
 .social-link:hover .social-icon {
-  @apply transform scale-110;
+  transform: scale(1.08);
 }
 
-.social-icon-wrapper::before {
-  content: '';
-  @apply absolute inset-0 bg-[#62BA1B] opacity-0 transition-opacity duration-300;
-}
-
-.social-link:hover .social-icon-wrapper::before {
-  @apply opacity-20;
-}
-
-/* Scroll effect */
 header.scrolled {
-  @apply bg-[#1B1B1B]/90 shadow-xl;
-  transform: translateY(-2px);
+  @apply border-[#62BA1B]/20 bg-[#1B1B1B]/95 shadow-xl;
+  transform: translate(-50%, -2px);
 }
 
-/* Animation for initial load */
 @keyframes slideDown {
   from {
-    transform: translateY(-100%);
+    transform: translate(-50%, -100%);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
     opacity: 1;
   }
 }
